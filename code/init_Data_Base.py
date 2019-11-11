@@ -40,46 +40,36 @@ if __name__ == "__main__":
 
     #Create Table
     session.execute("""
-    CREATE TABLE Application
+    CREATE TABLE Bts
     (
         id UUID PRIMARY KEY,
-        name text,
-        category text,
-        rating float,
-        reviews int,
-        size text,
-        installs text,
-        free Boolean,
-        price_dollar float,
-        content_rating text, 
-        genres text,
-        last_update date,
-        current_ver text,
-        android_ver text
+        station_id int,
+        datapoint_id int,
+        alarm_id int,
+        event_time timestamp,
+        value float,
+        valueThreshold float,
+        isActive Boolean,
+        storedtime timestamp
     );
     """)
     
     #Enter in the keyspace Customer-2
     session.execute("USE Customer2;")
 
-    #Create Tables
+    #Create Table
     session.execute("""
-    CREATE TABLE Application
+    CREATE TABLE Bts
     (
         id UUID PRIMARY KEY,
-        name text,
-        category text,
-        rating float,
-        reviews int,
-        size text,
-        installs text,
-        free Boolean,
-        price_dollar float,
-        content_rating text, 
-        genres text,
-        last_update date,
-        current_ver text,
-        android_ver text
+        station_id int,
+        datapoint_id int,
+        alarm_id int,
+        event_time timestamp,
+        value float,
+        valueThreshold float,
+        isActive Boolean,
+        storedtime timestamp
     );
     """)
 
