@@ -1,0 +1,7 @@
+multiprocess
+matplotlib
+pandas
+cassandra-driver
+argparse
+uuid
+paho-mqtt

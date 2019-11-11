@@ -1,0 +1,10 @@
+flask
+flask-jsonpify
+flask-restful
+Flask
+watchdog
+cassandra-driver
+argparse
+uuid
+multiprocess
+paho-mqtt

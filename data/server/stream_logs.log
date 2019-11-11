@@ -1,0 +1,180 @@
+2019-11-01 10:26:02 -  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+2019-11-01 10:26:26 - Command validated. Command processing...
+2019-11-01 10:26:26 - Exception on /start [GET]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 458, in wrapper
+    resp = resource(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask/views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 573, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "app.py", line 56, in get
+    port = run_manager(customer_id, "start")
+  File "/app/mysimbdpstreamingestmanager.py", line 58, in run_manager
+    return start_stream_watcher(customer)
+  File "/app/mysimbdpstreamingestmanager.py", line 26, in start_stream_watcher
+    launched_proc = subprocess.Popen("python", 100, script_file)
+  File "/usr/local/lib/python3.8/subprocess.py", line 854, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/local/lib/python3.8/subprocess.py", line 1702, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+PermissionError: [Errno 13] Permission denied: './customer-1/clientstreamingestapp.py'
+2019-11-01 10:26:26 - 172.19.0.1 - - [01/Nov/2019 10:26:26] "GET /start?id=customer-1&password=password-1 HTTP/1.1" 500 -
+2019-11-01 10:27:08 -  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+2019-11-01 10:27:15 - Command validated. Command processing...
+2019-11-01 10:27:15 - Exception on /start [GET]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 458, in wrapper
+    resp = resource(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask/views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 573, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "app.py", line 56, in get
+    run_manager(customer_id, "start")
+  File "/app/mysimbdpstreamingestmanager.py", line 58, in run_manager
+    return start_stream_watcher(customer)
+  File "/app/mysimbdpstreamingestmanager.py", line 26, in start_stream_watcher
+    launched_proc = subprocess.Popen("python", 100, script_file)
+  File "/usr/local/lib/python3.8/subprocess.py", line 854, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/local/lib/python3.8/subprocess.py", line 1702, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+PermissionError: [Errno 13] Permission denied: './customer-1/clientstreamingestapp.py'
+2019-11-01 10:27:15 - 172.19.0.1 - - [01/Nov/2019 10:27:15] "GET /start?id=customer-1&password=password-1 HTTP/1.1" 500 -
+2019-11-01 10:27:30 - Exception on /start [GET]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 458, in wrapper
+    resp = resource(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask/views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 573, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "app.py", line 55, in get
+    if verify_password(authent[customer_id], password):
+KeyError: None
+2019-11-01 10:27:30 - 172.19.0.1 - - [01/Nov/2019 10:27:30] "GET /start HTTP/1.1" 500 -
+2019-11-01 10:27:32 - Exception on /start [GET]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 458, in wrapper
+    resp = resource(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask/views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 573, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "app.py", line 55, in get
+    if verify_password(authent[customer_id], password):
+KeyError: None
+2019-11-01 10:27:32 - 172.19.0.1 - - [01/Nov/2019 10:27:32] "GET /start HTTP/1.1" 500 -
+2019-11-01 10:27:41 - Exception on /customer [GET]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 458, in wrapper
+    resp = resource(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask/views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 573, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "app.py", line 41, in get
+    if verify_password(authent[customer_id], password):
+KeyError: None
+2019-11-01 10:27:41 - 172.19.0.1 - - [01/Nov/2019 10:27:41] "GET /customer HTTP/1.1" 500 -
+2019-11-01 10:28:27 -  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+2019-11-01 10:28:27 - Exception on /customer [GET]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 458, in wrapper
+    resp = resource(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask/views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 573, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "app.py", line 41, in get
+    if verify_password(authent[customer_id], password):
+KeyError: None
+2019-11-01 10:28:27 - 172.19.0.1 - - [01/Nov/2019 10:28:27] "GET /customer HTTP/1.1" 500 -
+2019-11-01 10:28:55 -  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+2019-11-01 10:28:55 - Exception on /customer [GET]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 458, in wrapper
+    resp = resource(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask/views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 573, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "app.py", line 41, in get
+    if verify_password(authent[customer_id], password):
+KeyError: None
+2019-11-01 10:28:55 - 172.19.0.1 - - [01/Nov/2019 10:28:55] "GET /customer HTTP/1.1" 500 -
+2019-11-01 10:29:12 - 172.19.0.1 - - [01/Nov/2019 10:29:12] "GET /customer?id=customer-1&password=password-1 HTTP/1.1" 200 -
+2019-11-01 10:29:19 - Exception on /customer [GET]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 458, in wrapper
+    resp = resource(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask/views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 573, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "app.py", line 41, in get
+    if verify_password(authent[customer_id], password):
+KeyError: ''
+2019-11-01 10:29:19 - 172.19.0.1 - - [01/Nov/2019 10:29:19] "GET /customer?id= HTTP/1.1" 500 -
+2019-11-01 10:29:57 -  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+2019-11-01 10:30:02 - 172.19.0.1 - - [01/Nov/2019 10:30:02] "GET /customer?id=customer-1&password=password-1 HTTP/1.1" 200 -
+2019-11-01 10:30:09 - Command validated. Command processing...
+2019-11-01 10:30:09 - Exception on /start [GET]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.8/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 458, in wrapper
+    resp = resource(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask/views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/flask_restful/__init__.py", line 573, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "app.py", line 56, in get
+    run_manager(customer_id, "start")
+  File "/app/mysimbdpstreamingestmanager.py", line 58, in run_manager
+    return start_stream_watcher(customer)
+  File "/app/mysimbdpstreamingestmanager.py", line 26, in start_stream_watcher
+    launched_proc = subprocess.Popen("python", 100, script_file)
+  File "/usr/local/lib/python3.8/subprocess.py", line 854, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/local/lib/python3.8/subprocess.py", line 1702, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+PermissionError: [Errno 13] Permission denied: './customer-1/clientstreamingestapp.py'
+2019-11-01 10:30:09 - 172.19.0.1 - - [01/Nov/2019 10:30:09] "GET /start?id=customer-1&password=password-1 HTTP/1.1" 500 -
+2019-11-01 10:30:37 - 172.19.0.1 - - [01/Nov/2019 10:30:37] "GET /customer?id=customer-2&password=password-1 HTTP/1.1" 200 -
+2019-11-01 10:31:03 - 172.19.0.1 - - [01/Nov/2019 10:31:03] "GET /start?id=customer-2&password=password-1 HTTP/1.1" 200 -
