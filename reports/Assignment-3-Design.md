@@ -10,14 +10,14 @@ sensor = hyper bien pour analytic = tres doc sur
 The dataset I will use for this assignment will be the one of bts.
 This is a collection of sensors data from base stations. The data structure is as follow:
 
-* station_id: the id of the stations
-* datapoint_id: the id of the sensor (data point)
-* alarm_id: the id of the alarm
-* event_time: the time at which the event occurs
-* value: the value of the measurement of the datapoint
-* valueThreshold: the threshold set for the alarm. Note that some threshold values are set to a default value of 999999.
-* isActive: the alarm is active (true ) or not (false)
-* storedtime: no store
+* ```station_id```: the id of the stations
+* ```datapoint_id```: the id of the sensor (data point)
+* ```alarm_id```: the id of the alarm
+* ```event_time```: the time at which the event occurs
+* ```value```: the value of the measurement of the datapoint
+* ```valueThreshold```: the threshold set for the alarm. Note that some threshold values are set to a default value of 999999.
+* ```isActive```: the alarm is active (true ) or not (false)
+* ```storedtime```: no store
 
 
 ### Stream
@@ -105,3 +105,58 @@ avec keyed on peut regler la window !!!!!!!!!
 
 ## Question 4
 
+There is 2 types of metrics here : the ones directly or indirectly related to the customer's data and the ones that are not related at all to the customer's data.
+
+For the metrics not related at all to the customer's data, we can have, for example, the ```server response time``` which is the average time the server takes to response to a query.
+
+
+INSERT LIENS
+
+I thought about several metrics that we could use here :
+
+```Data Conversion Errors``` : which is the number of data that could not be converted to the expected output schema. This scenario will result in the loss of data (Drop)
+
+```Out-of-Order Events``` : which in our case could include events for which the time of the event_time is later than the current time or when the data does not arrive in the right order (for example when the event_time of the last event recorded is after the event_time of the event we want to record). This scenario will result in the loss of data (Drop) because in IoT it is often not the number of data that is missing but rather the quality of the data and in such cases, we may wonder about the quality of the data. So, the option to drop the event appears to me to be the least bad.
+
+```Ingestion speed``` : which is the average ingestion rate for an event.
+
+```Number of returned analytics``` : which is the number of analytics that was send to the client.
+
+```Records``` : which is the number of records read or written (respectively per input or output stream).
+
+```Dropped records``` : The number of records that were dropped (for any possible reason).
+
+
+Vitesse de l'analyse pour une ligne
+Vitesse d'insertion max
+Nombre de row qui engendre un retour utilisateur (
+
+server response time : average time the server takes to response to a query
+
+https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-monitoring
+
+
+
+https://docs.aws.amazon.com/kinesisanalytics/latest/dev/monitoring-metrics.html
+MillisBehindLatest (changer nom) : Indique à quelle distance de l'heure actuelle une application est en train de lire à partir de la source de diffusion en continu. ( = difference entre temps de la metadata d'insertion dans la queue de la data actuelle et celle de la derniere de la queue) 
+
+Max delay : Temps de la trame qui a pris le plus longtemps a etre traite
+
+runtime error ?
+
+
+input deserialization
+
+input event bytes / amount of data
+
+## Question 5
+
+client provide streamapp --> suit notre modele
+streamapp --> analytic --> store data in db
+
+client a un producer, le producer du client envoie les datas dans un channel
+
+client peut toogle (activer/desactiver) consumer du server
+
+flink (args = pipe + script) : applique sur le pipe le script, sans regarder veritablement le pipe
+store usefull data for analytics and store metrics
