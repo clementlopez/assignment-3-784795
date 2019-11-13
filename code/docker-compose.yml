@@ -1,7 +1,7 @@
 version: '3'
 
 services: 
- cas2: 
+  cas2: 
     container_name: cassan2
     image: cassandra:latest
     volumes:
@@ -15,7 +15,7 @@ services:
       - CASSANDRA_DC=datacenter1
     networks:
       - assignment
- server:
+  server:
     container_name: server
     build:
       context: ./server
@@ -27,7 +27,7 @@ services:
       - 5000:5000
     networks:
       - assignment
- mqtt:
+  mqtt:
     container_name: databroker
     image: eclipse-mosquitto:latest
     restart: always
@@ -38,6 +38,53 @@ services:
       - 9001:9001
     networks:
       - assignment
+
+  zookeeper:
+    image: zookeeper
+    container_name: zookeeper
+    restart: always
+    ports:
+      - 2181:2181
+  nimbus:
+    image: storm
+    container_name: nimbus
+    command: storm nimbus
+    depends_on:
+      - zookeeper
+      - mqtt
+    links:
+      - zookeeper
+      - mqtt
+    restart: always
+    ports:
+      - 6627:6627
+      - 8000:8000
+  supervisor:
+    image: storm
+    container_name: supervisor
+    command: storm supervisor
+    depends_on:
+      - nimbus
+      - zookeeper
+      - mqtt
+    links:
+      - nimbus
+      - zookeeper
+      - mqtt
+    restart: always
+  storm-ui: 
+    image: storm
+    container_name: storm-ui
+    command: storm ui
+    depends_on: 
+        - nimbus
+        - zookeeper
+    links: 
+        - nimbus
+        - zookeeper
+    restart: always
+    ports:
+        - "8080:8080"
 
 networks:
   assignment: {}
