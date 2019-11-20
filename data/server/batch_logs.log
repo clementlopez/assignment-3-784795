@@ -2884,3 +2884,17 @@
 2019-11-11 11:45:19 - in-event <InotifyEvent: src_path=b'./__pycache__', wd=1, mask=IN_CREATE|IN_ISDIR, cookie=0, name=b'__pycache__'>
 2019-11-11 11:45:19 - in-event <InotifyEvent: src_path=b'./__pycache__/mysimbdpstreamingestmanager.cpython-38.pyc', wd=7, mask=IN_CREATE, cookie=0, name=b'mysimbdpstreamingestmanager.cpython-38.pyc'>
 2019-11-11 11:45:20 - Detection of a file creation that does not require a call to clientbatchingestapp
+2019-11-13 15:01:16 - in-event <InotifyEvent: src_path=b'./__pycache__', wd=1, mask=IN_CREATE|IN_ISDIR, cookie=0, name=b'__pycache__'>
+2019-11-13 15:01:16 - in-event <InotifyEvent: src_path=b'./__pycache__/mysimbdpstreamingestmanager.cpython-38.pyc', wd=7, mask=IN_CREATE, cookie=0, name=b'mysimbdpstreamingestmanager.cpython-38.pyc'>
+2019-11-13 15:01:17 - Detection of a file creation that does not require a call to clientbatchingestapp
+2019-11-13 15:23:01 - in-event <InotifyEvent: src_path=b'./__pycache__', wd=1, mask=IN_CREATE|IN_ISDIR, cookie=0, name=b'__pycache__'>
+2019-11-13 15:23:01 - in-event <InotifyEvent: src_path=b'./__pycache__/mysimbdpstreamingestmanager.cpython-38.pyc', wd=7, mask=IN_CREATE, cookie=0, name=b'mysimbdpstreamingestmanager.cpython-38.pyc'>
+2019-11-13 15:23:01 - Detection of a file creation that does not require a call to clientbatchingestapp
+2019-11-13 15:32:35 - in-event <InotifyEvent: src_path=b'./__pycache__', wd=1, mask=IN_CREATE|IN_ISDIR, cookie=0, name=b'__pycache__'>
+2019-11-13 15:32:35 - in-event <InotifyEvent: src_path=b'./__pycache__/mysimbdpstreamingestmanager.cpython-38.pyc', wd=7, mask=IN_CREATE, cookie=0, name=b'mysimbdpstreamingestmanager.cpython-38.pyc'>
+2019-11-13 15:32:35 - in-event <InotifyEvent: src_path=b'./__pycache__/mysimbdpstreamingestmanager.cpython-38.pyc.140596752441392', wd=7, mask=IN_MOVED_FROM, cookie=3767, name=b'mysimbdpstreamingestmanager.cpython-38.pyc.140596752441392'>
+2019-11-13 15:32:35 - in-event <InotifyEvent: src_path=b'./__pycache__/mysimbdpstreamingestmanager.cpython-38.pyc', wd=7, mask=IN_MOVED_TO, cookie=3767, name=b'mysimbdpstreamingestmanager.cpython-38.pyc'>
+2019-11-13 15:32:35 - Detection of a file creation that does not require a call to clientbatchingestapp
+2019-11-18 16:44:39 - in-event <InotifyEvent: src_path=b'./__pycache__', wd=1, mask=IN_CREATE|IN_ISDIR, cookie=0, name=b'__pycache__'>
+2019-11-18 16:44:39 - in-event <InotifyEvent: src_path=b'./__pycache__/mysimbdpstreamingestmanager.cpython-38.pyc', wd=7, mask=IN_CREATE, cookie=0, name=b'mysimbdpstreamingestmanager.cpython-38.pyc'>
+2019-11-18 16:44:39 - Detection of a file creation that does not require a call to clientbatchingestapp

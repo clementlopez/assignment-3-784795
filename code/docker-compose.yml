@@ -43,6 +43,8 @@ services:
     image: zookeeper
     container_name: zookeeper
     restart: always
+    networks:
+      - assignment
     ports:
       - 2181:2181
   nimbus:
@@ -52,9 +54,11 @@ services:
     depends_on:
       - zookeeper
       - mqtt
-    links:
-      - zookeeper
-      - mqtt
+    # links:
+    #   - zookeeper
+    #   - mqtt
+    networks:
+      - assignment
     restart: always
     ports:
       - 6627:6627
@@ -67,10 +71,12 @@ services:
       - nimbus
       - zookeeper
       - mqtt
-    links:
-      - nimbus
-      - zookeeper
-      - mqtt
+    # links:
+    #   - nimbus
+    #   - zookeeper
+    #   - mqtt
+    networks:
+      - assignment
     restart: always
   storm-ui: 
     image: storm
@@ -79,9 +85,11 @@ services:
     depends_on: 
         - nimbus
         - zookeeper
-    links: 
-        - nimbus
-        - zookeeper
+    # links: 
+    #     - nimbus
+    #     - zookeeper
+    networks:
+      - assignment
     restart: always
     ports:
         - "8080:8080"
