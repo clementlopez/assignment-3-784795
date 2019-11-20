@@ -8,3 +8,5 @@ argparse
 uuid
 multiprocess
 paho-mqtt
+
+pika

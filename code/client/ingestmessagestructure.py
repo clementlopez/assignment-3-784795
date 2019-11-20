@@ -1,9 +1,10 @@
+#!/usr/bin/env python
 import paho.mqtt.client as mqtt
 import logging
 import argparse
 import os
 import time
-
+import pika
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Init authentication')
@@ -14,15 +15,19 @@ def parse_arguments():
     return parser.parse_args()
 
 def stream_data(message, topic):
-    logging.info("Stream data : creating new client instance")
-    client = mqtt.Client(args.u)
-    logging.info("Stream data : connecting to broker")
-    client.connect("localhost")
-    logging.info("Stream data : publishing into broker")
-    client.publish(topic,message)
-    logging.info("Stream data : message %s streamed, now disconnect" %(message))
-    client.disconnect()
-    logging.info("Stream data : disconnected")
+    logging.info("Stream data : Starting connection to RabbitMQ")
+    credentials = pika.PlainCredentials('guest', 'guest')
+    parameters = pika.ConnectionParameters('localhost', 5672, '/', credentials)
+    connection = pika.BlockingConnection(parameters)
+    channel = connection.channel()
+    logging.info("Stream data : Creation of the topic if not exists")
+    channel.queue_declare(queue=topic)
+    logging.info("Stream data : Sending message")
+    channel.basic_publish(exchange='',
+                        routing_key=topic,
+                        body='Hello World!')
+    logging.info("Stream data : Closing connection")
+    connection.close()
 
 
 if __name__ == "__main__":

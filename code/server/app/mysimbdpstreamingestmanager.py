@@ -11,8 +11,10 @@ logging.basicConfig(filename='/var/log/stream_logs.log',
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Init authentication')
+    parser.add_argument('-u', type=str, help='You must provide a user')
     #command (start or stop)
     parser.add_argument('-c', type=str, help='You must provide a command')
     return parser.parse_args()
@@ -67,3 +69,4 @@ def run_manager(customer, action, proc_id=0):
 
 if __name__ == "__main__":
     args = parse_arguments()
+    run_manager(args.u, args.c)
