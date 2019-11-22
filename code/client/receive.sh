@@ -1,0 +1,1 @@
+python client_receiver.py -queue receiver1

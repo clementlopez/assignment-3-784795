@@ -1,37 +1,26 @@
 version: '3'
 
 services: 
-  cas2: 
-    container_name: cassan2
-    image: cassandra:latest
-    volumes:
-      - ./../data/cassandra/node1:/var/lib/cassandra
-    ports:
-      - 9042:9042
-    environment:
-      - CASSANDRA_START_RPC=true
-      - CASSANDRA_CLUSTER_NAME=MyCluster
-      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-      - CASSANDRA_DC=datacenter1
-    networks:
-      - assignment
-  server:
-    container_name: server
-    build:
-      context: ./server
-      dockerfile: deployments/app/Dockerfile
-    volumes:
-      - ./../data/server:/server
-    tty: true
-    ports:
-      - 5000:5000
-    networks:
-      - assignment
+  # cas2: 
+  #   container_name: cassan2
+  #   image: cassandra:latest
+  #   volumes:
+  #     - ./../data/cassandra/node1:/var/lib/cassandra
+  #   ports:
+  #     - 9042:9042
+  #   environment:
+  #     - CASSANDRA_START_RPC=true
+  #     - CASSANDRA_CLUSTER_NAME=MyCluster
+  #     - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+  #     - CASSANDRA_DC=datacenter1
+  #   networks:
+  #     - assignment
   rabbitmq:
     container_name: rabbitmq1
-    image: "rabbitmq:3"
+    image: "rabbitmq:3.8.1-management-alpine"
     ports:
       - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASSWORD: guest
@@ -46,6 +35,8 @@ services:
     command: jobmanager
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    networks: 
+      - assignment
   taskmanager:
     image: "flink:latest"
     expose:

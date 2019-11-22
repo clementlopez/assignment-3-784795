@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import paho.mqtt.client as mqtt
 import logging
 import argparse
 import os
@@ -21,11 +20,12 @@ def stream_data(message, topic):
     connection = pika.BlockingConnection(parameters)
     channel = connection.channel()
     logging.info("Stream data : Creation of the topic if not exists")
-    channel.queue_declare(queue=topic)
+    channel.queue_declare(queue=topic, durable=True)
     logging.info("Stream data : Sending message")
     channel.basic_publish(exchange='',
                         routing_key=topic,
-                        body='Hello World!')
+                        body=message)
+    print("\n sending %s" % message)
     logging.info("Stream data : Closing connection")
     connection.close()
 
@@ -39,13 +39,19 @@ if __name__ == "__main__":
     if args.u is None:
         logging.debug("User unspecified when launching ingestmessagestructure")
         exit(0)
-    if args.file is None or os.path.exists(args.file):
+    if args.file is None or not os.path.exists(args.file):
+        print("%s" % args.file)
         logging.debug("No file to stream when launching ingestmessagestructure")
         exit(0)
     with open(args.file) as csv_file:
         data = csv_file.read()
         data_lines = data.splitlines()
+        i = 0
         for lineToStream in data_lines:
+            if i == 0:
+                i+=1
+                continue
             time.sleep(0.05) #to remove
             stream_data(lineToStream, args.u)
+            i+=1
 

@@ -153,3 +153,14 @@ client peut toogle (activer/desactiver) consumer du server
 
 flink (args = pipe + script) : applique sur le pipe le script, sans regarder veritablement le pipe
 store usefull data for analytics and store metrics
+
+
+fichier python chez client --> stream sur rabbitmq --> client lance script sur Flink qui lit le stream --> le transforme en objet java : BTSAlarmAlert & BTSAlarmEvent --> Analytics avec objet java --> retourne analytics en stream --> client lit le retour de l'analytics
+
+
+# Part 2
+
+## Question 1
+
+tel script python qui prend en entree fichier csv (prendrait des donnees en temps reel dans un environnement reel) converti les donnees selon tel format --> Flink converti le stream recu (string convertion
+
