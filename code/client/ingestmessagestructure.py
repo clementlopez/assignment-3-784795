@@ -24,7 +24,10 @@ def stream_data(message, topic):
     logging.info("Stream data : Sending message")
     channel.basic_publish(exchange='',
                         routing_key=topic,
-                        body=message)
+                        body=message,
+                        properties=pika.BasicProperties(
+                            delivery_mode = 2, # make message persistent
+                        ))
     print("\n sending %s" % message)
     logging.info("Stream data : Closing connection")
     connection.close()

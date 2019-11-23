@@ -18,7 +18,9 @@ def parse_arguments():
 
 def callback(ch, method, properties, body):
     print(" [x] Received %r" % body)
+    time.sleep(0.5) #simulate some processing work
     logging.info("Receive data : %r" % body)
+    ch.basic_ack(delivery_tag = method.delivery_tag)
 
 if __name__ == "__main__":
     args = parse_arguments()
@@ -32,7 +34,7 @@ if __name__ == "__main__":
     channel = connection.channel()
     logging.info("Receive data : Creation of the topic if not exists")
     channel.queue_declare(queue=args.queue)
-    channel.basic_consume(queue=args.queue, auto_ack=True, on_message_callback=callback)
+    channel.basic_consume(queue=args.queue, on_message_callback=callback)
     print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()
     
