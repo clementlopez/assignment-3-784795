@@ -1,5 +1,6 @@
 import csv
 import sys
+from datetime import datetime
 
 # Verifying user args
 if len(sys.argv) != 2:
@@ -16,9 +17,9 @@ with open(filename, mode='r') as csv_file:
     # Store columns headers'
     fields=csv_reader.fieldnames
     # Sorting by station_id
-    csv_reader = sorted(csv_reader, key=lambda row: float(row['station_id']))
+    csv_reader = sorted(csv_reader, key=lambda row: datetime.strptime(row['event_time'], "%Y-%m-%d %H:%M:%S UTC"))
     # This will be the current station_id variable
-    sid=None
+    count=0
     # This will count the number of different station_id (aka subdataset)
     sidn=0
     # This will be the current output file
@@ -27,12 +28,12 @@ with open(filename, mode='r') as csv_file:
     size=len(csv_reader)
     for row in csv_reader:
         # If the station_id change
-        if row['station_id'] != sid:
+        if (count%5000) == 0:
             # Close the previous outfile (except for first pass)
             if outf:
                 outf.close()
-            # Update current id
-            sid=row['station_id']
+            # Update count
+            count+=1
             # Generate a subset name
             subset_fn = 'subdataset_' + str(sidn) + '.csv'
             sidn += 1
@@ -41,6 +42,7 @@ with open(filename, mode='r') as csv_file:
             writer=csv.DictWriter(outf, fieldnames=fields)
             writer.writeheader()
             print("Start writing subdataset number", sidn)
+        count+=1
         # Writing current row
         writer.writerow(row)
     outf.close()

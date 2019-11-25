@@ -1,0 +1,1 @@
+python ingestmessagestructure.py -u customer2 -file $(realpath ./dataset/subdataset_0.csv)

@@ -34,7 +34,7 @@ def stream_data(message, topic):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='../../data/streamdata_logs.log',
+    logging.basicConfig(filename='../../log/streamdata_logs.log',
                         level=logging.DEBUG,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
@@ -54,7 +54,7 @@ if __name__ == "__main__":
             if i == 0:
                 i+=1
                 continue
-            time.sleep(0.05) #to remove
+            time.sleep(1)
             stream_data(lineToStream, args.u)
             i+=1
 

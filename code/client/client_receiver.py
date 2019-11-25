@@ -5,7 +5,7 @@ import os
 import time
 import pika
 
-logging.basicConfig(filename='../../data/streamdata_receiver_logs.log',
+logging.basicConfig(filename='../../logs/streamdata_receiver_logs.log',
                     level=logging.DEBUG,
                     format='%(asctime)s - %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
