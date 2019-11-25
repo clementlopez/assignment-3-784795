@@ -46,9 +46,10 @@ Batch analytics will serve more to perform summaries, for example we can compute
 ### Keyed and Non-Keyed data streams
 From what I understood from the documentation on the Internet that I was able to read, the main difference between keyed and non-keyed data streams is that in the case of keyed streams, any attributes of the incoming events can be used as a key and each logical keyed stream can be processed in parallel from the rest. In the case of non-keyed streams, each stream will be perform by a single task (not split into parallel process).
 
-To make things easier, I will arbitrarily take a basic schema in which each user will correspond to a single station. There will already be a distribution per station and in this case handle keyed will not be necessarily necessary.
+If we want to make things easier, We can arbitrarily take a basic schema in which each user will correspond to a single station. There will already be a distribution per station and in this case handle keyed will not be necessarily necessary.
 
 However, to do analytics on our dataset, it would be more convenient to be able to sort more easily by other factors than the stations (for example, to be able to sort by alarm) and it is possible to see a utility in the handle keyed that would save time by parallelizing processes.
+In addition, if we handle keyed data stream we can process them as keyed but also as non-keyed data (if we want for example to have a counter of all the data received, whatever the key) but if we not handle the keyed data stream, well, we can process keyed data without having to use a lot of code lines to sort them in a simple function.
 
 So I will handle keyed data streams.
 
@@ -59,18 +60,12 @@ There are several guarantees that we could provide to the client in this type of
 * ```Order of file arrival``` : for the alert triggering the order is important
   * if in the received data, we have a data indicating that there is no alert with an event_time at 11:30 am but the following one indicates that there is one with an event_time at 11:25 am, it is not necessary to trigger an alert since the alarm is over
 * ```Availability of the server``` : server fully available depending on the duplication rate (for example, on the [Microsoft Azure's website](https://azure.microsoft.com/en-in/support/legal/sla/summary/) they guarantee at least 99.9% availability of the Azure Active Directory Basic and Premium services to their customers).
-* ```Event delivery guarantees``` : My dataset being made up of sensor data, we are here in the heart of the IoT. In the IoT, we often encounter cases where there is a lot of data and not necessarily a good bandwidth from the point of view of the embedded object (here from the sensor point of view). In this case it is probably preferable to lose a data from time to time in favour of speed of execution. That's why I think that MQTT's Event Delivery Guarantee default value: ```At Most Once``` is the best option in our case.
-
-***************************************
-https://admhelp.microfocus.com/lr/en/12.60-12.63/help/WebHelp/Content/Controller/mon_mqtt.htm
-
-https://docs.microsoft.com/en-us/stream-analytics-query/event-delivery-guarantees-azure-stream-analytics
-
-***********************************
+* ```Event delivery guarantees``` : My dataset being made up of sensor data, we are here in the heart of the IoT. In the IoT, we often encounter cases where there is a lot of data and not necessarily a good bandwidth from the point of view of the embedded object (here from the sensor point of view). Some data may be lost at the time of sending (because of the customer's sensor, its bad connection or other ...) so it is important to guarantee that if sent successfully, the data will be processed. RabbitMq helps in the way that we can marks messages as 'persistent' where we (the customer) sends them. Messages marked as 'persistent' that are delivered to 'durable' queues will be logged to disk. Durable queues are recovered in the event of a crash, along with any persistent messages they stored prior to the crash. So that guarantee that the message will be processed if it arrives to the RabbitMq server. And with Flink we can set the event process to the value ```Exactly_once``` that guarantee that the data will be processed one and only one time.
 
 ## Question 3
 
 ### Types of time should be associated with stream sources
+
 In our dataset, we are lucky to have a timestamp (event_time), which we can easily keep to associate it with the stream source for the analytics.
 
 ### Types of windows
@@ -83,18 +78,11 @@ The advantages of a window by number of rows is that there is always the same nu
 
 If we take a time window, there may be a reliability rate varying between windows depending on the number of rows present in each time gap. However, this allows a better coherence between the windows and it seems closer to reality.
 
-The choice between a time window or by number of rows can be made on a case-by-case basis depending on the data sent by the sensors and the customer's wishes.
+The choice between a time window or by number of rows can be made on a case-by-case basis depending on the data sent by the sensors and the customer's wishes (we can also have different windows at the same time).
 
 In addition, another aspect of the window is its ability to be continuously close to the present time. The stream flow being a continuous flow, it seems to me essential that the window we choose is a sliding window.
 
-***************************
-Pour analyse/a quel point les donnees sont fiables -- pour tout ce qui est filtering
-
-en time window : si grand gap entre chaque row, le taux de fiabilite peut etre moins fiable mais ca semble plus proche de la realite
-Ca peut etre au cas par cas en fonction des datas envoyes par les capteurs et des envies du client
-
-avec keyed on peut regler la window !!!!!!!!!
-***************************
+Furthermore, to stick a maximum to the reality I will sort the data by ```event_time``` which will be more relevant than process data without close date (and disordered date).
 
 ## Question 4
 
@@ -102,8 +90,7 @@ There is 2 types of metrics here : the ones directly or indirectly related to th
 
 For the metrics not related at all to the customer's data, we can have, for example, the ```server response time``` which is the average time the server takes to response to a query.
 
-
-INSERT LIENS
+I used several sites to complete my research, I found particularly interesting on the subject of [Microsoft Azure's website](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-monitoring) and [Amazon's website](https://docs.aws.amazon.com/kinesisanalytics/latest/dev/monitoring-metrics.html)
 
 I thought about several metrics that we could use here :
 
@@ -125,23 +112,6 @@ I thought about several metrics that we could use here :
 
 * ```Delay in the queue``` : Indicates how far from the current time an application is reading from the streaming source ( in other words, the difference between the insertion time in the queue of the current event and the insertion time in the queue of the last one of the queue, the insertion time in the queue can normally be recovered via metadata)
 
-**************************************
-Vitesse de l'analyse pour une ligne
-Vitesse d'insertion max
-Nombre de row qui engendre un retour utilisateur (
-
-https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-monitoring
-
-
-
-https://docs.aws.amazon.com/kinesisanalytics/latest/dev/monitoring-metrics.html
-
-
-Max delay : Temps de la trame qui a pris le plus longtemps a etre traite
-
-runtime error ?
-*********************************
-
 ## Question 5
 
 client provide streamapp --> suit notre modele
@@ -162,5 +132,196 @@ fichier python chez client --> stream sur rabbitmq --> client lance script sur F
 
 ## Question 1
 
-tel script python qui prend en entree fichier csv (prendrait des donnees en temps reel dans un environnement reel) converti les donnees selon tel format --> Flink converti le stream recu (string convertion
+I use the SimpleBTS dataset in my project, I have sorted the data in the start file (bts-data-alarm-2017.csv) by event_time and I have divided it into several smaller files.
 
+I use the same python script as the previous assignment to send the data: I send them as the csv line that the program reads. The python script takes a csv file as input but in a real environment it is obvious that the data would be sent directly by the sensors, in real time.
+
+Flink receives this csv line as a String and will deserialize it as a Java object ```BTSEvent``` which matches all the information received as well as a boolean to ensure that the deserialization went well and that there was no cast error, for example (this boolean is used to implement a Metric that Flink returns to the user) 
+
+```java
+public class BTSEvent {
+	public String station_id;
+	public String datapoint_id;
+	public String alarm_id;
+	public Date event_time;
+	public float value;
+	public float valueThreshold;
+	public boolean is_alarm_active;
+	public boolean well_deserialized;
+```
+
+After calculating the Analytics and Metrics Flink sends this information back to the user. The template for the returned data is as follows:
+
+```json
+{
+    "type":<Type_of_returned_information>,
+    "key":{
+        <name_key_1>:<value_key_1>,
+        <name_key_2>:<value_key_2>,
+        ...
+    }
+    "data":{
+        <name_data_1>:<value_data_1>,
+        <name_data_2>:<value_data_2>,
+        ...
+    }
+}
+```
+
+There are 4 possible types of information : ```Global Analytic```, ```Global Metric```, ```Windowed Analytic``` and ```Windowed Metric```.
+
+Since the data can be keyed with multiple keys, the size of the ```key``` attribute can vary (for the moment all calculations are performed with a triple key: ```station_id```, ```datapoint_id``` and ```alarm_id```).
+
+The ```data``` attribute varies according to the type of information returned.
+
+The receiver script of the client places these received data as String json in a log file.
+
+## Question 2
+
+I implemented two analysis functions: one with a window (one-minute window, refreshed every 5 seconds) and another global one, without a window.
+As said before, I sort my data with the triple key ```station_id```, ```datapoint_id``` and ```alarm_id``` to really have the data specific to an alarm type of a specific sensor in a specific station.
+
+Afterwards, the functions (whether global or in a window) calculate the average, maximum and minimum while keeping a counter of the recorded data and of the active alarms. In addition, as indicated above, if we have not been able to recover the ```event_time```, the ```value```, the ```valueThreshold``` or if the alarm is active or not (```isActive```) we can take into account the data and we count it as a ```Input Deserialization Errors```.
+
+In summary, for each alarm type of a sensor of a station we have :
+
+```Global Analytics```
+* its global maximum value
+* its global minimum value
+* its global mean value
+* its global number of data well received
+* its global number of active alarms
+
+```Global Metric```
+* its global number of deserialization errors
+
+```Windowed Analytics```
+* its maximum value on a one-minute window
+* its minimum value on a one-minute window
+* its mean value on a one-minute window
+* its number of data well received on a one-minute window
+* its number of active alarms on a one-minute window
+
+```Windowed Metric:```
+* its number of deserialization errors on a one-minute window
+
+## Question 3
+
+In order to test my application, I run it with 1 customer (1 sender, 1 analysis in Flink and 1 receiver) and then with 2 customers in parallel. Each time I watch the logs and the frequency with which I recovered them.
+
+So, with a single customer we have (we catch the lines of a certain type of received data for a certain key and see every how long we receive the data):
+
+~~~
+2019-11-25 13:06:10 - Receive data : '{"type":"Windowed Analytic","key":{"station_id":1161115009, "datapoint_id":121, "alarm_id":308}"data":{ "mean":240.6, "max":241.0, "min":240.0, "counter":5, "alarms":3}}'
+...
+2019-11-25 13:06:16 - Receive data : '{"type":"Windowed Analytic","key":{"station_id":1161115009, "datapoint_id":121, "alarm_id":308}"data":{ "mean":240.5, "max":241.0, "min":240.0, "counter":10, "alarms":5}}'
+...
+2019-11-25 13:06:22 - Receive data : '{"type":"Windowed Analytic","key":{"station_id":1161115009, "datapoint_id":121, "alarm_id":308}"data":{ "mean":240.53333333333333, "max":241.0, "min":240.0, "counter":15, "alarms":8}}'
+...
+2019-11-25 13:06:28 - Receive data : '{"type":"Windowed Analytic","key":{"station_id":1161115009, "datapoint_id":121, "alarm_id":308}"data":{ "mean":240.5, "max":241.0, "min":240.0, "counter":20, "alarms":10}}'
+~~~
+
+We can see that we receive data each 6 seconds approximatelly (as a reminder, we refresh the window every 5 seconds).
+
+~~~
+2019-11-25 13:08:37 - Receive data : '{"type":"Windowed Analytic","key":{"station_id":1161115009, "datapoint_id":121, "alarm_id":308}"data":{ "mean":240.50877192982455, "max":241.0, "min":240.0, "counter":57, "alarms":29}}'
+...
+2019-11-25 13:08:43 - Receive data : '{"type":"Windowed Analytic","key":{"station_id":1161115009, "datapoint_id":121, "alarm_id":308}"data":{ "mean":240.52631578947367, "max":241.0, "min":240.0, "counter":57, "alarms":30}}'
+...
+2019-11-25 13:08:49 - Receive data : '{"type":"Windowed Analytic","key":{"station_id":1161115009, "datapoint_id":121, "alarm_id":308}"data":{ "mean":240.50877192982455, "max":241.0, "min":240.0, "counter":57, "alarms":29}}'
+~~~
+
+The performances does not seems to be impacted if we put more customers because Flink has a base of 8 task slots, so Flink can handle the change from 1 to 2 customers. We can imagine that with more than 8 customers in the same time it can be less effective but test it on my laptop will be a biased test because of the performance of my laptop very far from the performance of a real server.
+
+So far, we test the performances in terms of speed, and we also had an overview of Analytics' functions performances (for that we can see the "data" attribute in the previous logs).
+But I test it with the dataset provided which is a clean dataset (no deserialized error) so I coud not test my metric with it. In order to test the Metric, I create a new csv file ```test.csv``` (with only a few lines) with some good datas and with one corrupted data (with a "value" of ```FalseData``` instead of a float value). The false data is well catched and not taking into account for the Analytics (for the same key, there is a good and a bad data, the good one is taking into account for the Analytic part and the bad one for the Metric part) :
+
+~~~
+2019-11-25 13:48:53 - Receive data : '{"type":"Windowed Analytic","key":{"station_id":1160622001, "datapoint_id":1, "alarm_id":302}"data":{ "mean":10000.0, "max":10000.0, "min":10000.0, "counter":1, "alarms":1}}'
+
+2019-11-25 13:48:53 - Receive data : '{"type":"Windowed Metric","key":{"station_id":1160622001, "datapoint_id":1, "alarm_id":302} "data":{ "data_conversion_errors":1}}'
+~~~
+
+## Question 4
+
+As explained in the previous question, when a bad data is sended to the messagebroker, Flink catches it as a data conversion error and return it into a metric.
+
+Even with a data line empty in the csv (```,,,,,,,```) Flink catches it as a data conversion error (but without being able to linked it with another key because the key of the data is an empty one):
+~~~
+2019-11-25 13:56:21 - Receive data : '{"type":"Global Metric","key":{"station_id":, "datapoint_id":, "alarm_id":} "data":{ "data_conversion_errors":1}}'
+~~~
+
+## Question 5
+
+My parallelism setting can only be 1 (if we send a higher value we have a ProgramInvocationError), the parallelism setting makes it possible to split a task into several parallel instances for execution and each parallel instance processes a subset of the task's input data.
+
+My code does not makes it possible, after some research I think the problem is that I use RMQSource instance for the connection with RabbitMQ instead of ParallelRMQSource which would allows to have a higher parallel degree.
+
+# Part 3 - Connection
+
+## Question 1
+
+My mysimbdp-coredms is stored in Cassandra (the docker container is not initialized in for now in this assignment). If I had to implement it, I will probably use a CassandraSink, which is a Flink's Java object which returns a CassandraSinkBuilder, which offers methods to further configure the sink, and finally `build()` the sink instance.
+For now, the Cassandra sinks support Tuple, so I will have to change the type of DataStream I use, which is for now a single String as :
+
+```json
+{
+    "type":<Type_of_returned_information>,
+    "key":{
+        <name_key_1>:<value_key_1>,
+        <name_key_2>:<value_key_2>,
+        ...
+    }
+    "data":{
+        <name_data_1>:<value_data_1>,
+        <name_data_2>:<value_data_2>,
+        ...
+    }
+}
+```
+
+and convert it into a Tuple :
+If I have only one key and only one data it will be :
+
+```java
+Tuple3<String, String, String>
+```
+
+The difficulties will be that I have multiple keys and multiple data values.
+
+Then with the CassandraSink, we can insert directly into Cassandra :
+
+```java
+CassandraSink.addSink(datastream)
+        .setQuery("INSERT INTO ... values (?, ?,...);")
+        .setHost(cassandra_host)
+        .build();
+```
+## Question 2
+
+For example, a batch analysis could be 'for an alarm type: at which time of the day it is most triggered' :
+
+Flink can be used to launch triggered batch analysis, the trigger can be a periodic time clock or an event. So, we can program some batch analysis by implementing for example a trigger that launch a analyse every first day of the month/week. The function will connect to the Cassandra database, recover the data, calculate the batch analysis before and send it to the client.
+
+## Question 3
+
+As explained in the previous question Triggers can be used to launch analysis by periodic time but also by an event. we can then set a trigger to trigger when streaming analytics detects a critical condition.
+Batch analysis and Stream analysis seem to be quite the same in Flink, the philosophy of Flink is :
+
+~~~
+streaming first, with batch as a special case of streaming
+~~~
+
+## Question 4
+
+A basic answer to the increase of customers and data would be to deploy more TaskManagers (or workers) which execute the tasks and which would be able to manage more customers if they are more.
+
+In addition, we could think of another step before Flink in order to preprocess data, for example Kafka, and make it easier for Flink to analyse it.
+
+## Question 5
+
+In Flink, the checkpointing mode defines what consistency guarantees the system gives in the presence of failures. In my code, I use the CheckPointingMode to ```EXACTLY_ONCE``` which means that the data streams are replayed such that lost parts of the processing are repeated. At the end, with my checkpointingmode configuration, the functions/operators see each record exactly once.
+
+In addition, RabbitMq helps in the way that the customer can marks messages as 'persistent' where he sends them. Messages marked as 'persistent' that are delivered to 'durable' queues will be logged to disk. Durable queues are recovered in the event of a crash, along with any persistent messages they stored prior to the crash.
+
+We can deduce that we have end-to-end exactly once delivery but we have to take into account the case where the data never arrives to the RabbitMq server (for any reason, it may be the bad bandwith of the sensor for example), in this case it is possible that we may lose data.
