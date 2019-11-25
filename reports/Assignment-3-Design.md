@@ -114,18 +114,19 @@ I thought about several metrics that we could use here :
 
 ## Question 5
 
-client provide streamapp --> suit notre modele
-streamapp --> analytic --> store data in db
+* First step is the user calling his local script to send data into RabbitMQ input channel (the input channel is the username of the customer in my implementation). I do it with the script ```ingestmessagestructure.py``` that I mainly recovered from the previous assignment. I also do a sh script which call the python scipt with pre-program arguments for demo : ```send.sh```
 
-client a un producer, le producer du client envoie les datas dans un channel
+* Second step is the beginning of the Flink's job. The data rows are in the input channel but Flink has not be activated, so the Analytics and Metrics haven't start yet. The user has to call the Flink's job specifying the input channel to consume (which is the customer username) and the output channel in which the analytics will be sent. I write a script that start the job jar in the Flink server (with pre-program arguments for demo) : ```start_analytics.sh``` but before that we have to upload the jar file on Flink's server which is done with the ```script_install_jar_on_flink.sh```
 
-client peut toogle (activer/desactiver) consumer du server
+* Once the Flink's job is running he will consume data from input channel, compute Analytics and Metrics and send them in the output channel.
 
-flink (args = pipe + script) : applique sur le pipe le script, sans regarder veritablement le pipe
-store usefull data for analytics and store metrics
+* The customer can see in real time the analytics and metrics that Flink sends to the output channel. The receiver script is written in python : ```client_receiver.py``` and is launch by a pre-programed arguments sh script : ```receive.sh```
 
+* Also, what I did not implement for now is the connection with the database (Cassandra in my 2 previous assignments) which have to be done after the Analytics and Metrics because they are likely to delete data (impossible to deserealized or incomplete data for example).
 
-fichier python chez client --> stream sur rabbitmq --> client lance script sur Flink qui lit le stream --> le transforme en objet java : BTSAlarmAlert & BTSAlarmEvent --> Analytics avec objet java --> retourne analytics en stream --> client lit le retour de l'analytics
+The following diagram summarizes the different steps of the process.
+
+![Design](design.jpg)
 
 
 # Part 2

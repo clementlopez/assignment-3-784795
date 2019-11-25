@@ -40,7 +40,7 @@ Run in another terminal ```./send.sh``` or if you want to test with a very small
 
 ### Results
 
-The results of the Analytics are printed in the terminal where the receiver script runs. You can also have a look at them in the file ```streamdata_receiver_logs.log``` and you can have a look at the sender script logs in the file ```streamdata_logs.log```, this 2 files are in the ```logs``` directory.
+The results of the Analytics are printed in the terminal where the receiver script runs. You can also have a look at them in the file ```streamdata_receiver_logs.log``` and you can have a look at the sender script logs in the file ```streamdata_logs.log```, this 2 files are in the ```logs``` directory. This 2 files only appear in the structure after your first run of the code (I delete all previous logs in order to make them more readable)
 
 
 

@@ -5,3 +5,4 @@ cassandra-driver
 argparse
 uuid
 paho-mqtt
+pika

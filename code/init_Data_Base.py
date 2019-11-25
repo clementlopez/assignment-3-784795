@@ -43,9 +43,9 @@ if __name__ == "__main__":
     CREATE TABLE Bts
     (
         id UUID PRIMARY KEY,
-        station_id int,
-        datapoint_id int,
-        alarm_id int,
+        station_id text,
+        datapoint_id text,
+        alarm_id text,
         event_time timestamp,
         value float,
         valueThreshold float,
@@ -62,9 +62,9 @@ if __name__ == "__main__":
     CREATE TABLE Bts
     (
         id UUID PRIMARY KEY,
-        station_id int,
-        datapoint_id int,
-        alarm_id int,
+        station_id text,
+        datapoint_id text,
+        alarm_id text,
         event_time timestamp,
         value float,
         valueThreshold float,
